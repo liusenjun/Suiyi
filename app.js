@@ -1,6 +1,23 @@
 // app.js
 App({
   onLaunch() {
+    //注册云开发
+    wx.cloud.init({
+      env: "suiyi-5goxhr285fd1f64b",
+    })
+
+    //获取openid
+
+    wx.cloud.callFunction({
+      name: "getOpenid"
+    }).then(res => {
+      console.log(res);
+      this.globalData.openid = res.result.openid;
+    })
+    .catch(res => {
+      console.log("failed")
+    })
+
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -43,9 +60,21 @@ App({
       return sColor
     }
   },
+  //跨页面异步传递
+  addListener(callback){
+    this.callback = callback;
+  },
+
+  setChangedData(data){
+    this.data = data;
+    if(this.callback != null){
+      this.callback(data)
+    }
+  },
   
   globalData: {
     userInfo: null,
-    primaryColor: "#4285f4"
+    primaryColor: "#4285f4",
+    openid: "",
   }
 })

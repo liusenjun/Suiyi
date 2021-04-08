@@ -12,14 +12,44 @@ Page({
   },
   // 事件处理函数
   onLoad() {
-    if (app.globalData.primaryColor) {
-      this.setData({
-        primaryColor: app.globalData.primaryColor
-      })
-    }
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true,
+      })
+    }
+
+    //跨页面异步传递
+    app.addListener((changedData) => {
+      this.setData({
+        data: changedData,
+      })
+      console.log(changedData);
+    })
+  },
+
+  onReady() {
+    //拉取openid
+    console.log(app.globalData.openid)
+    if (app.globalData.openid) {
+      this.setData({
+        openid: app.globalData.openid,
+      })
+    } else {
+      console.log("get openid from server")
+      wx.cloud.callFunction({
+          name: "getOpenid"
+        }).then(res => {
+          // console.log(res);
+          this.data.openid = res.result.openid;
+          app.globalData.openid = res.result.openid;
+        })
+        .catch(res => {
+          console.log("failed")
+        })
+    };
+    if (app.globalData.primaryColor) {
+      this.setData({
+        primaryColor: app.globalData.primaryColor
       })
     }
   },
