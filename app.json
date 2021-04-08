@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/category/category",
-    "pages/account/account"
+    "pages/account/account",
+    "pages/daiban/daiban"
   ],
   "window": {
     "backgroundColor": "@bgColor",
